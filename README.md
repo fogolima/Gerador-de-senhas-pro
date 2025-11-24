@@ -5,7 +5,7 @@ Criado para fornecer senhas fortes com entropia elevada usando **crypto.getRando
 
 ## 🚀 Demonstração Online
 Acesse o projeto ao vivo em:  
-➡️ https://SEU-USUARIO.github.io/gerador-senhas-pro
+➡️https://fogolima.github.io/Gerador-de-senhas-pro/
 
 ## 🛡 Recursos Principais
 - Geração de senhas com número aleatório criptográfico
