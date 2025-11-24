@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gerador de Senhas Profissional</title>
+
+<style>
+/* ===================== */
+/*  ESTILO DARK PREMIUM  */
+/* ===================== */
+
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1e2630;
+  --text: #e6edf3;
+  --muted: #9aa5b1;
+  --primary: #3b82f6;
+  --primary-dark: #1e40af;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 12px;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* HEADER / NAV */
+header {
+  background: var(--bg2);
+  padding: 16px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+nav a {
+  color: var(--text);
+  margin-left: 16px;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.8;
+}
+nav a:hover {
+  opacity: 1;
+  color: var(--primary);
+  transition: 0.2s;
+}
+
+/* SECTION */
+section {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h2 {
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 24px;
+}
+
+/* PAINÉIS */
+.panel {
+  background: var(--bg2);
+  padding: 22px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  margin-bottom: 32px;
+}
+
+/* ELEMENTOS DO GERADOR */
+.output-area {
+  background: var(--bg3);
+  padding: 12px;
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  margin-bottom: 12px;
+  overflow-x: auto;
+}
+
+button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+}
+button:hover {
+  background: var(--primary-dark);
+  transition: 0.2s;
+}
+
+label {
+  display: block;
+  margin: 6px 0;
+}
+input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+input[type="number"],
+input[type="range"] {
+  width: 100%;
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid #333;
+  padding: 8px;
+  border-radius: var(--radius);
+}
+
+.copy-status {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.strength-bar {
+  background: #333;
+  height: 10px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.strength-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--danger), #facc15, var(--success));
+  transition: width 0.3s ease;
+}
+
+/* FOOTER */
+footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  background: var(--bg2);
+  border-top: 1px solid #222;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  nav a { margin-left: 10px; font-size: 13px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===================== -->
+<!--      CABEÇALHO       -->
+<!-- ===================== -->
+<header>
+  <h1>🔐 Gerador de Senhas Profissional</h1>
+  <nav>
+    <a href="#gerador">Gerador</a>
+    <a href="#dicas">Dicas</a>
+    <a href="#sobre">Sobre</a>
+  </nav>
+</header>
+
+<!-- ===================== -->
+<!--   SEÇÃO DO GERADOR    -->
+<!-- ===================== -->
+<section id="gerador">
+  <h2>Gerador de Senhas Fortes</h2>
+  <div class="panel">
+
+    <div class="output-area" id="passwordBox">Clique em gerar</div>
+
+    <button id="btnGenerate">Gerar Senha</button>
+    <button id="btnCopy" style="margin-top:10px;">Copiar</button>
+    <div class="copy-status" id="copyStatus"></div>
+
+    <hr style="border-color:#333;margin:20px 0;">
+
+    <label>Tamanho da senha:</label>
+    <input id="len" type="number" min="4" max="128" value="16">
+    <input id="range" type="range" min="4" max="128" value="16">
+
+    <label><input id="lower" type="checkbox" checked> Incluir minúsculas (a-z)</label>
+    <label><input id="upper" type="checkbox" checked> Incluir maiúsculas (A-Z)</label>
+    <label><input id="numbers" type="checkbox" checked> Números (0-9)</label>
+    <label><input id="symbols" type="checkbox" checked> Símbolos (!@#$%)</label>
+
+    <label><input id="noAmbiguous" type="checkbox"> Evitar caracteres ambíguos (0/O/1/I/...)</label>
+
+    <hr style="border-color:#333;margin:20px 0;">
+
+    <h3 style="margin:0 0 10px 0;">Força da Senha</h3>
+    <div class="strength-bar"><div id="strengthFill" class="strength-bar-fill"></div></div>
+    <p id="entropy" style="color:var(--muted);font-size:13px;margin-top:6px;">Entropia: — bits</p>
+
+  </div>
+</section>
+
+<!-- ===================== -->
+<!--     SEÇÃO DICAS       -->
+<!-- ===================== -->
+<section id="dicas">
+  <h2>Dicas de Segurança Digital</h2>
+
+  <div class="panel">
+    <ul>
+      <li>Use senhas com **20+ caracteres** para contas importantes.</li>
+      <li>Nunca reutilize a mesma senha em vários sites.</li>
+      <li>Ative a autenticação de dois fatores (2FA) sempre que possível.</li>
+      <li>Evite datas de nascimento, nomes e palavras comuns.</li>
+      <li>Prefira usar um **gerenciador de senhas**.</li>
+      <li>Troque senhas antigas ou vazadas imediatamente.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== -->
+<!--     SEÇÃO SOBRE       -->
+<!-- ===================== -->
+<section id="sobre">
+  <h2>Sobre o Projeto</h2>
+
+  <div class="panel">
+    <p>Este site foi desenvolvido para ajudar qualquer pessoa a criar senhas seguras usando geração criptográfica avançada pelo navegador.</p>
+    <p>Todos os cálculos acontecem **localmente no seu dispositivo**, sem envio para servidores, garantindo total privacidade.</p>
+    <p>Ideal para: usuários comuns, empresas, equipes de TI e criadores de conteúdo.</p>
+  </div>
+</section>
+
+<!-- ===================== -->
+<!--        FOOTER         -->
+<!-- ===================== -->
+<footer>
+  Feito com 💙 para mais segurança online • 2025
+</footer>
+
+<!-- ===================== -->
+<!--        SCRIPT         -->
+<!-- ===================== -->
+<script>
+/* ===================== */
+/*  GERADOR CRIPTO SEGURO */
+/* ===================== */
+
+const pwdBox = document.getElementById("passwordBox");
+const btnGen = document.getElementById("btnGenerate");
+const btnCopy = document.getElementById("btnCopy");
+const copyStatus = document.getElementById("copyStatus");
+
+const lenInput = document.getElementById("len");
+const rangeInput = document.getElementById("range");
+
+const lower = document.getElementById("lower");
+const upper = document.getElementById("upper");
+const numbers = document.getElementById("numbers");
+const symbols = document.getElementById("symbols");
+const noAmb = document.getElementById("noAmbiguous");
+
+const strengthFill = document.getElementById("strengthFill");
+const entropyText = document.getElementById("entropy");
+
+const POOLS = {
+  lower: "abcdefghijklmnopqrstuvwxyz",
+  upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  numbers: "0123456789",
+  symbols: "!@#$%^&*()-_=+[]{};:,.<>/?`~"
+};
+const AMBIGUOUS = "Il1O0|`'\"/,;:.";
+
+function getPool() {
+  let pool = "";
+  if (lower.checked) pool += POOLS.lower;
+  if (upper.checked) pool += POOLS.upper;
+  if (numbers.checked) pool += POOLS.numbers;
+  if (symbols.checked) pool += POOLS.symbols;
+
+  if (noAmb.checked) {
+    pool = [...pool].filter(c => !AMBIGUOUS.includes(c)).join("");
+  }
+  return pool || POOLS.lower + POOLS.numbers;
+}
+
+function secureInt(max) {
+  const arr = new Uint32Array(1);
+  const limit = Math.floor(0xFFFFFFFF / max) * max;
+  while (true) {
+    crypto.getRandomValues(arr);
+    if (arr[0] < limit) return arr[0] % max;
+  }
+}
+
+function generatePassword() {
+  const length = Number(lenInput.value) || 16;
+  const pool = getPool();
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out += pool[secureInt(pool.length)];
+  }
+  return out;
+}
+
+function calcEntropy(length, poolSize) {
+  return (length * Math.log2(poolSize)).toFixed(1);
+}
+
+function updateStrength(bits) {
+  let pct = 0;
+  if (bits < 40) pct = 20;
+  else if (bits < 60) pct = 40;
+  else if (bits < 90) pct = 60;
+  else if (bits < 128) pct = 80;
+  else pct = 100;
+
+  strengthFill.style.width = pct + "%";
+}
+
+function render() {
+  const pwd = generatePassword();
+  pwdBox.textContent = pwd;
+
+  const entropy = calcEntropy(lenInput.value, getPool().length);
+  entropyText.textContent = "Entropia: " + entropy + " bits";
+  updateStrength(entropy);
+}
+
+btnGen.onclick = render;
+
+btnCopy.onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(pwdBox.textContent);
+    copyStatus.textContent = "Senha copiada ✔";
+    copyStatus.style.color = "var(--success)";
+  } catch {
+    copyStatus.textContent = "Erro ao copiar";
+    copyStatus.style.color = "var(--danger)";
+  }
+  setTimeout(() => (copyStatus.textContent = ""), 1500);
+};
+
+rangeInput.oninput = () => {
+  lenInput.value = rangeInput.value;
+};
+lenInput.oninput = () => {
+  rangeInput.value = lenInput.value;
+};
+
+render();
+</script>
+
+</body>
+</html>
